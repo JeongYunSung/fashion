@@ -4,6 +4,7 @@ create table product(
   category_id int not null,
   name varchar(30) not null,
   description varchar(100) not null,
+  stock int not null,
   create_date datetime not null
 );
 
