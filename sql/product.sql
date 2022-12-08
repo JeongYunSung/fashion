@@ -1,13 +1,11 @@
 create table product(
-  id int not null auto_increment,
+  id int not null auto_increment primary key,
   user_id int not null,
   category_id int not null,
   name varchar(30) not null,
   description varchar(100) not null,
   create_date datetime not null
-)
-
-alter table product add constraint product_pk primary key (id);
+);
 
 alter table product add constraint product_user_id_fk foreign key (user_id) references user(id);
 
