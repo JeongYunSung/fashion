@@ -10,7 +10,7 @@ export interface Category {
 export class CategoryMapper {
   constructor(private readonly mysqlService: MysqlService) {}
 
-  async getCategory(id: number): Promise<Category> {
+  async findCategoryById(id: number): Promise<Category> {
     const conn = await this.mysqlService.getConnection();
     const [rows] = await conn.query('SELECT * FROM category where id = ?', [
       id,
@@ -18,7 +18,7 @@ export class CategoryMapper {
     return rows[0];
   }
 
-  async getCategories(): Promise<Category[]> {
+  async findAll(): Promise<Category[]> {
     const conn = await this.mysqlService.getConnection();
     const [rows] = await conn.query('SELECT * FROM category');
     return rows;

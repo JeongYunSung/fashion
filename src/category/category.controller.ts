@@ -1,18 +1,14 @@
-import { Controller, Get, Inject, Param } from '@nestjs/common';
-import { Category, CategoryMapper } from './category.mapper';
+import { Controller, Get, Inject } from '@nestjs/common';
+import { Category } from './category.mapper';
+import { CategoryService } from './category.service';
 
 @Controller('categories')
 export class CategoryController {
   @Inject()
-  private readonly categoryMapper: CategoryMapper;
-
-  @Get('/:id')
-  async getCategory(@Param('id') id: number): Promise<Category> {
-    return await this.categoryMapper.getCategory(id);
-  }
+  private readonly categoryService: CategoryService;
 
   @Get()
   async getCategories(): Promise<Category[]> {
-    return await this.categoryMapper.getCategories();
+    return await this.categoryService.getCategories();
   }
 }
