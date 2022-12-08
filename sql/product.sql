@@ -5,7 +5,7 @@ create table product(
   name varchar(30) not null,
   description varchar(100) not null,
   stock int not null,
-  create_date datetime not null
+  is_delete boolean not null DEFAULT false
 );
 
 alter table product add constraint product_user_id_fk foreign key (user_id) references user(id);
