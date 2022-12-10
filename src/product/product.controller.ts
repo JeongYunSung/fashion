@@ -10,10 +10,10 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { ImageService } from 'src/image/image.service';
+import { Image } from '../image/image.mapper';
 import { Product } from './product.mapper';
 import { ProductService } from './product.service';
-import { Image } from '../image/image.mapper';
-import { ImageService } from 'src/image/image.service';
 
 interface ProductRequest {
   name: string;
@@ -31,6 +31,10 @@ export class ProductController {
     private readonly imageService: ImageService,
   ) {}
 
+  /**
+   * @description 상품 생성 API
+   * @param request  { name, description, stock, category_name, role, images: [{image_key, image_value}] }
+   */
   @Post()
   @UseGuards(JwtAuthGuard)
   async createProduct(@Body() request: ProductRequest, @Req() req) {
@@ -54,6 +58,12 @@ export class ProductController {
     return insertId;
   }
 
+  /**
+   * @description 내 상품 리스트 조회 API
+   * @param page - 현재 페이지
+   * @param size - 보여줄 페이지의 크기 ex) page=1&size=5 1페이지, 개수는 5개
+   * * @returns - [ { id, name, description, stock, category_name, email, user_name, role, images: [{image_key, image_value}] } ]
+   */
   @Get('my')
   @UseGuards(JwtAuthGuard)
   async getProductsByMy(
@@ -69,11 +79,22 @@ export class ProductController {
     );
   }
 
+  /**
+   * @description 상품 조회 API
+   * @param id - 상품의 아이디 입력
+   * @returns - { id, name, description, stock, category_name, email, user_name, role, images: [{image_key, image_value}] }
+   */
   @Get(':id')
   async getProduct(@Param('id') id: number) {
     return this.productService.findProductById(id);
   }
 
+  /**
+   * @description 상품 리스트 조회 API
+   * @param page - 현재 페이지
+   * @param size - 보여줄 페이지의 크기 ex) page=1&size=5 1페이지, 개수는 5개
+   * * @returns - [ { id, name, description, stock, category_name, email, user_name, role, images: [{image_key, image_value}] } ]
+   */
   @Get()
   async getPage(@Query('page') page = 1, @Query('size') size = 10) {
     page -= 1;
@@ -81,6 +102,10 @@ export class ProductController {
     return this.productService.findPage({ offset: page, limit: size });
   }
 
+  /**
+   * @description 상품 삭제 API
+   * @param id - 상품의 아이디 입력
+   */
   @Delete(':id')
   @UseGuards(JwtAuthGuard)
   async deleteProduct(@Param('id') id: number, @Req() req) {
