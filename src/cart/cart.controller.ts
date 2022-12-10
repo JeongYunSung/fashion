@@ -33,7 +33,7 @@ export class CartController {
   @UseGuards(JwtAuthGuard)
   async addItem(@Body() item: Item, @Req() req) {
     item.user_id = req.user.id;
-    await this.cartService.addItem(item);
+    return await this.cartService.addItem(item);
   }
 
   /**
@@ -42,6 +42,6 @@ export class CartController {
   @Delete('clear')
   @UseGuards(JwtAuthGuard)
   async clearItems(@Req() req) {
-    await this.cartService.clearItems(req.user.id);
+    return await this.cartService.clearItems(req.user.id);
   }
 }

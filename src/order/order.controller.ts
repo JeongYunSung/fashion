@@ -24,7 +24,7 @@ export class OrderController {
   @UseGuards(JwtAuthGuard)
   async createOrder(@Body() order: Order, @Req() req): Promise<void> {
     order.user_id = req.user.id;
-    await this.orderService.createOrder(order);
+    return await this.orderService.createOrder(order);
   }
 
   /**
@@ -34,7 +34,7 @@ export class OrderController {
   @Delete(':id')
   @UseGuards(JwtAuthGuard)
   async cancelOrder(@Param('id') orderId: number, @Req() req): Promise<void> {
-    await this.orderService.cancelOrder(orderId, req.user.id);
+    return await this.orderService.cancelOrder(orderId, req.user.id);
   }
 
   /**
