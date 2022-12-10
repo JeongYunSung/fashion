@@ -5,6 +5,7 @@ export interface OrderQuery {
   id: number;
   product_name: string;
   quantity: number;
+  price: number;
   image_key: string;
   image_value: string;
 }
@@ -38,6 +39,7 @@ export default class OrderMapper {
       `
       SELECT
         o.id,
+        p.price,
         p.name as product_name,
         o.quantity,
         "thumb" as image_key,

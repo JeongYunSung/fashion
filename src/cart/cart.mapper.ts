@@ -5,6 +5,7 @@ export interface Item {
   user_id: number;
   product_id: number;
   quantity: number;
+  price: number;
   image_key: string;
   image_value: string;
 }
@@ -31,6 +32,7 @@ export class CartMapper {
         c.quantity, 
         p.name, 
         p.category_name,
+        p.price,
         "thumb" as image_key,
         (select i.image_value from image i where i.product_id = p.id and i.image_key = 'thumb') as image_value
       from cart c
