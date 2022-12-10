@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
-import { ProductService } from './product.service';
+import { ImageModule } from 'src/image/image.module';
 import { ProductController } from './product.controller';
 import { ProductMapper } from './product.mapper';
+import { ProductService } from './product.service';
 
 @Module({
+  imports: [ImageModule],
   providers: [ProductMapper, ProductService],
   controllers: [ProductController],
 })

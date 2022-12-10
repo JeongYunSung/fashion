@@ -5,7 +5,7 @@ import { Page, Product, ProductMapper, ProductQuery } from './product.mapper';
 export class ProductService {
   constructor(private readonly productMapper: ProductMapper) {}
 
-  async createProduct(product: Product): Promise<void> {
+  async createProduct(product: Product): Promise<any> {
     return this.productMapper.insertProduct(product);
   }
 
@@ -17,8 +17,11 @@ export class ProductService {
     return this.productMapper.findProductById(id);
   }
 
-  async findProductsByEamil(email: string): Promise<ProductQuery[]> {
-    return this.productMapper.findProductsByEamil(email);
+  async findProductsByUserId(
+    page: Page,
+    userId: number,
+  ): Promise<ProductQuery[]> {
+    return this.productMapper.findProductsByUserId(page, userId);
   }
 
   async findPage(page: Page): Promise<ProductQuery[]> {
