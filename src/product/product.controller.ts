@@ -20,6 +20,7 @@ interface ProductRequest {
   description: string;
   user_id: number;
   category_id: number;
+  price: number;
   stock: number;
   images: Image[];
 }
@@ -33,7 +34,7 @@ export class ProductController {
 
   /**
    * @description 상품 생성 API
-   * @param request  { name, description, stock, category_name, role, images: [{image_key, image_value}] }
+   * @param request  { name, description, stock, category_name, price, role, images: [{image_key, image_value}] }
    */
   @Post()
   @UseGuards(JwtAuthGuard)
@@ -46,6 +47,7 @@ export class ProductController {
       description: request.description,
       user_id: req.user.id,
       category_id: request.category_id,
+      price: request.price,
       stock: request.stock,
     };
     const { insertId } = (await this.productService.createProduct(product))[0];
@@ -62,7 +64,7 @@ export class ProductController {
    * @description 내 상품 리스트 조회 API
    * @param page - 현재 페이지
    * @param size - 보여줄 페이지의 크기 ex) page=1&size=5 1페이지, 개수는 5개
-   * * @returns - [ { id, name, description, stock, category_name, email, user_name, role, images: [{image_key, image_value}] } ]
+   * * @returns - [ { id, name, description, stock, price, category_name, email, user_name, role, images: [{image_key, image_value}] } ]
    */
   @Get('my')
   @UseGuards(JwtAuthGuard)
@@ -82,7 +84,7 @@ export class ProductController {
   /**
    * @description 상품 조회 API
    * @param id - 상품의 아이디 입력
-   * @returns - { id, name, description, stock, category_name, email, user_name, role, images: [{image_key, image_value}] }
+   * @returns - { id, name, description, stock, price, category_name, email, user_name, role, images: [{image_key, image_value}] }
    */
   @Get(':id')
   async getProduct(@Param('id') id: number) {
@@ -93,7 +95,7 @@ export class ProductController {
    * @description 상품 리스트 조회 API
    * @param page - 현재 페이지
    * @param size - 보여줄 페이지의 크기 ex) page=1&size=5 1페이지, 개수는 5개
-   * * @returns - [ { id, name, description, stock, category_name, email, user_name, role, images: [{image_key, image_value}] } ]
+   * * @returns - [ { id, name, description, stock, price, category_name, email, user_name, role, images: [{image_key, image_value}] } ]
    */
   @Get()
   async getPage(@Query('page') page = 1, @Query('size') size = 10) {

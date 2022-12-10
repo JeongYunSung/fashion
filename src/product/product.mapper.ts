@@ -7,6 +7,7 @@ export interface Product {
   description: string;
   user_id: number;
   category_id: number;
+  price: number;
   stock: number;
 }
 
@@ -18,6 +19,7 @@ export interface ProductQuery {
   category_name: number;
   name: string;
   description: string;
+  price: number;
   stock: number;
   images: ImageQuery[];
 }
@@ -52,6 +54,7 @@ export class ProductMapper {
         p.name,
         p.description,
         p.stock, 
+        p.price,
         c.name as category_name,
         u.email, 
         u.name as user_name, 
@@ -78,7 +81,8 @@ export class ProductMapper {
         p.id,
         p.name,
         p.description,
-        p.stock, 
+        p.stock,
+        p.price,
         c.name as category_name,
         u.email, 
         u.name as user_name, 
@@ -103,7 +107,8 @@ export class ProductMapper {
         p.id,
         p.name,
         p.description,
-        p.stock, 
+        p.stock,
+        p.price,
         c.name as category_name,
         u.email, 
         u.name as user_name, 
@@ -131,6 +136,7 @@ export class ProductMapper {
       name: row[0].name,
       description: row[0].description,
       stock: row[0].stock,
+      price: row[0].price,
       images: [],
     };
 
