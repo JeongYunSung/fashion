@@ -11,7 +11,7 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { Item } from './cart.mapper';
 import { CartService } from './cart.service';
 
-@Controller('cart')
+@Controller('carts')
 export class CartController {
   constructor(private readonly cartService: CartService) {}
 
@@ -39,7 +39,7 @@ export class CartController {
   /**
    * @description - 장바구니를 비우는 API
    */
-  @Delete('clear')
+  @Delete()
   @UseGuards(JwtAuthGuard)
   async clearItems(@Req() req) {
     return await this.cartService.clearItems(req.user.id);

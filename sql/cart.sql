@@ -1,7 +1,8 @@
-create table cart(
+create table ca\rt(
   id int not null auto_increment primary key,
   user_id int not null,
   product_id int not null,
+  price int not null,
   quantity int not null,
   is_delete boolean not null default FALSE
 );

@@ -6,14 +6,14 @@ export interface Item {
   product_id: number;
   quantity: number;
   price: number;
-  image_key: string;
-  image_value: string;
 }
 
 export interface ItemQuery {
   category_name: number;
   name: string;
   quantity: number;
+  image_key: string;
+  image_value: string;
 }
 
 @Injectable()
@@ -31,13 +31,14 @@ export class CartMapper {
       `select 
         c.quantity, 
         p.name, 
-        p.category_name,
+        ca.name as category_name,
         p.price,
         "thumb" as image_key,
         (select i.image_value from image i where i.product_id = p.id and i.image_key = 'thumb') as image_value
       from cart c
       inner join product p on c.product_id = p.id
-      where c.user_id = ? and is_delete = false`,
+      inner join category ca on p.category_id = ca.id
+      where c.user_id = ? and c.is_delete = false`,
       [userId],
     );
 
