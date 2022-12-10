@@ -12,7 +12,7 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { Order, OrderQuery } from './order.mapper';
 import { OrderService } from './order.service';
 
-@Controller('order')
+@Controller('orders')
 export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
