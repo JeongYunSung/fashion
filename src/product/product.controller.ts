@@ -25,6 +25,11 @@ interface ProductRequest {
   images: Image[];
 }
 
+interface BlobResponse {
+  mime: string;
+  value: any;
+}
+
 @Controller('products')
 export class ProductController {
   constructor(
@@ -34,7 +39,7 @@ export class ProductController {
 
   /**
    * @description 상품 생성 API
-   * @param request  { name, description, stock, category_name, price, role, images: [{image_key, image_value}] }
+   * @param request  { name, description, stock, category_name, price, images: [{image_key, image_value}] }
    */
   @Post()
   @UseGuards(JwtAuthGuard)
@@ -52,9 +57,14 @@ export class ProductController {
     };
     const { insertId } = (await this.productService.createProduct(product))[0];
 
-    request.images.forEach((image) => {
-      image.product_id = insertId;
-      this.imageService.createImage(image);
+    await new Promise<void>((resolve) => {
+      request.images.forEach(async (image) => {
+        const { value } = await this.toFile(image.image_value);
+        image.product_id = insertId;
+        image.image_value = value;
+        this.imageService.createImage(image);
+        resolve();
+      });
     });
 
     return insertId;
@@ -116,4 +126,16 @@ export class ProductController {
     }
     return this.productService.deleteProduct(id);
   }
+
+  async toFile(base_data): Promise<BlobResponse> {
+    const arr = base_data.split(',');
+    const mime = arr[0].match(/:(.*?);/)[1];
+    const value = Buffer.from(arr[1], 'base64');
+
+    return {
+      mime,
+      value,
+    };
+  }
+
 }
