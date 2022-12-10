@@ -5,6 +5,8 @@ export interface Item {
   user_id: number;
   product_id: number;
   quantity: number;
+  image_key: string;
+  image_value: string;
 }
 
 export interface ItemQuery {
@@ -28,7 +30,9 @@ export class CartMapper {
       `select 
         c.quantity, 
         p.name, 
-        p.category_name 
+        p.category_name,
+        "thumb" as image_key,
+        (select i.image_value from image i where i.product_id = p.id and i.image_key = 'thumb') as image_value
       from cart c
       inner join product p on c.product_id = p.id
       where c.user_id = ? and is_delete = false`,

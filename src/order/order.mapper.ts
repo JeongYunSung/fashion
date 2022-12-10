@@ -5,6 +5,8 @@ export interface OrderQuery {
   id: number;
   product_name: string;
   quantity: number;
+  image_key: string;
+  image_value: string;
 }
 
 export interface Order {
@@ -37,7 +39,9 @@ export default class OrderMapper {
       SELECT
         o.id,
         p.name as product_name,
-        o.quantity
+        o.quantity,
+        "thumb" as image_key,
+        (select i.image_value from image i where i.product_id = p.id and i.image_key = 'thumb') as image_value
       FROM orders o
       inner join product p on o.product_id = p.id
       where o.user_id = ?`,
