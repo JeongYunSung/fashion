@@ -2,7 +2,7 @@ create table image(
   id int not null auto_increment primary key,
   product_id int not null,
   image_key varchar(30) not null,
-  image_value text not null
+  image_value blob not null
 );
 
 alter table image add constraint image_fk foreign key (product_id) references product(id);
