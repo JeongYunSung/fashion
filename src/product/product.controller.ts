@@ -6,7 +6,10 @@ import {
   Param,
   Post,
   Query,
+  Req,
+  UseGuards,
 } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { Product } from './product.mapper';
 import { ProductService } from './product.service';
 
@@ -15,7 +18,12 @@ export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @Post()
-  async createProduct(@Body() product: Product) {
+  @UseGuards(JwtAuthGuard)
+  async createProduct(@Body() product: Product, @Req() req) {
+    if (req.user.role !== 'admin') {
+      return { message: '관리자만 접근 가능합니다.' };
+    }
+    product.user_id = req.user.id;
     return this.productService.createProduct(product);
   }
 
@@ -31,7 +39,11 @@ export class ProductController {
   }
 
   @Delete(':id')
-  async deleteProduct(@Param('id') id: number) {
+  @UseGuards(JwtAuthGuard)
+  async deleteProduct(@Param('id') id: number, @Req() req) {
+    if (req.user.role !== 'admin') {
+      return { message: '관리자만 접근 가능합니다.' };
+    }
     return this.productService.deleteProduct(id);
   }
 }

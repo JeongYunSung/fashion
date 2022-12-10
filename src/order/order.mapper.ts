@@ -22,14 +22,15 @@ export default class OrderMapper {
     await connection.query('INSERT INTO orders set', [order]);
   }
 
-  async cancelOrder(orderId: number): Promise<void> {
+  async cancelOrder(orderId: number, userId: number): Promise<void> {
     const connection = await this.mysqlService.getConnection();
-    await connection.query('update orders set is_cancel = true WHERE id = ?', [
-      orderId,
-    ]);
+    await connection.query(
+      'update orders set is_cancel = true WHERE id = ? and user_id',
+      [orderId, userId],
+    );
   }
 
-  async findAll(): Promise<OrderQuery[]> {
+  async findAllByUserId(userId: number): Promise<OrderQuery[]> {
     const connection = await this.mysqlService.getConnection();
     const [rows] = await connection.query(
       `
@@ -38,7 +39,9 @@ export default class OrderMapper {
         p.name as product_name,
         o.quantity
       FROM orders o
-      inner join product p on o.product_id = p.id`,
+      inner join product p on o.product_id = p.id
+      where o.user_id = ?`,
+      [userId],
     );
     return rows;
   }

@@ -13,6 +13,9 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
+  /**
+   * @description - JWT 토큰을 검증 및 유저 정보를 반환한다.
+   */
   async validate(payload: any) {
     const user = await this.authService.validateUser(
       payload.email,

@@ -1,4 +1,13 @@
-import { Body, Controller, Delete, Get, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { Item } from './cart.mapper';
 import { CartService } from './cart.service';
 
@@ -6,18 +15,33 @@ import { CartService } from './cart.service';
 export class CartController {
   constructor(private readonly cartService: CartService) {}
 
+  /**
+   * @description - 장바구니 조회 API
+   * @returns [{ cartId: 1, userId: 1, itemId: 1, quantity: 1}, {...}] 와 같이 장바구니에 등록되어있는 정보들을 조회한다.
+   */
   @Get()
-  async getItems(@Query('user_id') userId: number) {
-    return this.cartService.getItems(userId);
+  @UseGuards(JwtAuthGuard)
+  async getItems(@Req() req) {
+    return this.cartService.getItems(req.user.id);
   }
 
+  /**
+   * @description - 장바구니 추가 API
+   * @param item - { "product_id": 1, "quantity": 1 } 형식에 맞게 장바구니에 추가한다.
+   */
   @Post()
-  async addItem(@Body() item: Item) {
+  @UseGuards(JwtAuthGuard)
+  async addItem(@Body() item: Item, @Req() req) {
+    item.user_id = req.user.id;
     await this.cartService.addItem(item);
   }
 
+  /**
+   * @description - 장바구니를 비우는 API
+   */
   @Delete('clear')
-  async clearItems() {
-    await this.cartService.clearItems(1);
+  @UseGuards(JwtAuthGuard)
+  async clearItems(@Req() req) {
+    await this.cartService.clearItems(req.user.id);
   }
 }

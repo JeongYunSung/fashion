@@ -9,11 +9,11 @@ export class OrderService {
     await this.orderMapper.insertOrder(order);
   }
 
-  async cancelOrder(orderId: number): Promise<void> {
-    await this.orderMapper.cancelOrder(orderId);
+  async cancelOrder(orderId: number, userId: number): Promise<void> {
+    await this.orderMapper.cancelOrder(orderId, userId);
   }
 
-  async findAll(): Promise<OrderQuery[]> {
-    return this.orderMapper.findAll();
+  async findAllByUserId(userId: number): Promise<OrderQuery[]> {
+    return this.orderMapper.findAllByUserId(userId);
   }
 }
