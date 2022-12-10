@@ -1,4 +1,4 @@
-create table ca\rt(
+create table cart(
   id int not null auto_increment primary key,
   user_id int not null,
   product_id int not null,

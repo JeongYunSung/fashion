@@ -3,6 +3,7 @@ import { MysqlService } from 'nest-mysql2';
 
 export interface OrderQuery {
   id: number;
+  category_name: string;
   product_name: string;
   quantity: number;
   price: number;
@@ -12,7 +13,7 @@ export interface OrderQuery {
 
 export interface Order {
   user_id: number;
-  order_id: number;
+  product_id: number;
   quantity: number;
 }
 
@@ -22,7 +23,7 @@ export default class OrderMapper {
 
   async insertOrder(order: Order): Promise<void> {
     const connection = await this.mysqlService.getConnection();
-    await connection.query('INSERT INTO orders set', [order]);
+    await connection.query('INSERT INTO orders set ?', [order]);
   }
 
   async cancelOrder(orderId: number, userId: number): Promise<void> {
@@ -41,12 +42,14 @@ export default class OrderMapper {
         o.id,
         p.price,
         p.name as product_name,
+        c.name as category_name,
         o.quantity,
         "thumb" as image_key,
         (select i.image_value from image i where i.product_id = p.id and i.image_key = 'thumb') as image_value
       FROM orders o
       inner join product p on o.product_id = p.id
-      where o.user_id = ?`,
+      inner join category c on p.category_id = c.id
+      where o.user_id = ? and o.is_cancel = false`,
       [userId],
     );
     return rows;
